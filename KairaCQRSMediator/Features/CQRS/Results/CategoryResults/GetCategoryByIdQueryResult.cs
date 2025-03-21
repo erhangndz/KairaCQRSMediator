@@ -8,6 +8,6 @@ namespace KairaCQRSMediator.Features.CQRS.Results.CategoryResults
         public string CategoryName { get; set; }
         public string ImageUrl { get; set; }
 
-        public IList<Product> Products { get; set; }
+       
     }
 }
