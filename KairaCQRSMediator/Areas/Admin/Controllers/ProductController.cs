@@ -33,8 +33,25 @@ namespace KairaCQRSMediator.Areas.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateProduct(CreateProductCommand command)
         {
+            //Fast Fail Yöntemi 
+
+            var categories = await _getCategoryQueryHandler.Handle();
+
+            ViewBag.categories = (from x in categories
+                                  select new SelectListItem
+                                  {
+                                      Text = x.CategoryName,
+                                      Value = x.CategoryId.ToString()
+                                  }).ToList();
+
+            if (!ModelState.IsValid)
+            {
+                return View(command);
+            }
+
             await _mediator.Send(command);
             return RedirectToAction("Index");
+
         }
 
         public async Task<IActionResult> UpdateProduct(int id)
@@ -50,6 +67,33 @@ namespace KairaCQRSMediator.Areas.Admin.Controllers
 
             var product = await _mediator.Send(new GetProductByIdQuery(id));
             return View(product);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> UpdateProduct(UpdateProductCommand command)
+        {
+
+            var categories = await _getCategoryQueryHandler.Handle();
+
+            ViewBag.categories = (from x in categories
+                                  select new SelectListItem
+                                  {
+                                      Text = x.CategoryName,
+                                      Value = x.CategoryId.ToString()
+                                  }).ToList();
+            if (!ModelState.IsValid)
+            {
+                return View(command);
+            }
+
+            await _mediator.Send(command);
+            return RedirectToAction("Index");
+        }
+
+        public async Task<IActionResult> DeleteProduct(int id)
+        {
+            await _mediator.Send(new RemoveProductCommand(id));
+            return RedirectToAction(nameof(Index));
         }
     }
 }
