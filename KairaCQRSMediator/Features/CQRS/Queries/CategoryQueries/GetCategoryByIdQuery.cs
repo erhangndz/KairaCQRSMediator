@@ -1,6 +1,9 @@
-﻿namespace KairaCQRSMediator.Features.CQRS.Queries.CategoryQueries
+﻿using KairaCQRSMediator.Dispatchers.Markers;
+using KairaCQRSMediator.Features.CQRS.Results.CategoryResults;
+
+namespace KairaCQRSMediator.Features.CQRS.Queries.CategoryQueries
 {
-    public class GetCategoryByIdQuery
+    public class GetCategoryByIdQuery: IQuery<GetCategoryByIdQueryResult>
     {
         public int Id { get; set; }
 

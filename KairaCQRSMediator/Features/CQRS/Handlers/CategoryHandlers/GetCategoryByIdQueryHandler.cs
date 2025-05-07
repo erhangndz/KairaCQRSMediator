@@ -1,11 +1,12 @@
 ﻿using KairaCQRSMediator.DataAccess.Entities;
+using KairaCQRSMediator.Dispatchers;
 using KairaCQRSMediator.Features.CQRS.Queries.CategoryQueries;
 using KairaCQRSMediator.Features.CQRS.Results.CategoryResults;
 using KairaCQRSMediator.Repositories;
 
 namespace KairaCQRSMediator.Features.CQRS.Handlers.CategoryHandlers
 {
-    public class GetCategoryByIdQueryHandler
+    public class GetCategoryByIdQueryHandler : IQueryHandler<GetCategoryByIdQuery,GetCategoryByIdQueryResult>
     {
         private readonly IRepository<Category> _repository;
 
@@ -14,7 +15,7 @@ namespace KairaCQRSMediator.Features.CQRS.Handlers.CategoryHandlers
             _repository = repository;
         }
 
-        public async Task<GetCategoryByIdQueryResult> Handle(GetCategoryByIdQuery query)
+        public async Task<GetCategoryByIdQueryResult> HandleAsync(GetCategoryByIdQuery query)
         {
             var category = await _repository.GetByIdAsync(query.Id);
 

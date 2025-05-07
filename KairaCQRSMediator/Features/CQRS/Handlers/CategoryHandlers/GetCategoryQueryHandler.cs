@@ -1,20 +1,15 @@
 ﻿using KairaCQRSMediator.DataAccess.Entities;
+using KairaCQRSMediator.Dispatchers;
+using KairaCQRSMediator.Features.CQRS.Queries.CategoryQueries;
 using KairaCQRSMediator.Features.CQRS.Results.CategoryResults;
 using KairaCQRSMediator.Features.Mediator.Results.ProductResults;
 using KairaCQRSMediator.Repositories;
 
 namespace KairaCQRSMediator.Features.CQRS.Handlers.CategoryHandlers
 {
-    public class GetCategoryQueryHandler
+    public class GetCategoryQueryHandler(IRepository<Category> _categoryRepository) : IQueryHandler<GetCategoryQuery, List<GetCategoryQueryResult>>
     {
-        private readonly IRepository<Category> _categoryRepository;
-
-        public GetCategoryQueryHandler(IRepository<Category> categoryRepository)
-        {
-            _categoryRepository = categoryRepository;
-        }
-
-        public async Task<List<GetCategoryQueryResult>> Handle()
+        public async Task<List<GetCategoryQueryResult>> HandleAsync(GetCategoryQuery query)
         {
             var categories = await _categoryRepository.GetAllAsync();
 
@@ -23,11 +18,8 @@ namespace KairaCQRSMediator.Features.CQRS.Handlers.CategoryHandlers
                 CategoryId = category.CategoryId,
                 CategoryName = category.CategoryName,
                 ImageUrl = category.ImageUrl,
-                Products= (IList<GetProductsQueryResult>)category.Products
+                Products = (IList<GetProductsQueryResult>)category.Products
             }).ToList();
         }
-
-
-
     }
 }

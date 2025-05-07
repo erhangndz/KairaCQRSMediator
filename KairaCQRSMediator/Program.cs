@@ -6,10 +6,14 @@ using KairaCQRSMediator.Mappings;
 using KairaCQRSMediator.Repositories;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
+using KairaCQRSMediator.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+
+builder.Services.AddCqrsDispatcher()
+    .AutoRegisterCqrsHandlers<Program>();
 builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
 
 builder.Services.AddFluentValidationAutoValidation()

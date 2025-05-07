@@ -1,4 +1,7 @@
-﻿using KairaCQRSMediator.Features.CQRS.Handlers.CategoryHandlers;
+﻿using KairaCQRSMediator.Dispatchers;
+using KairaCQRSMediator.Features.CQRS.Handlers.CategoryHandlers;
+using KairaCQRSMediator.Features.CQRS.Queries.CategoryQueries;
+using KairaCQRSMediator.Features.CQRS.Results.CategoryResults;
 using KairaCQRSMediator.Features.Mediator.Commands.ProductCommands;
 using KairaCQRSMediator.Features.Mediator.Queries.ProductQueries;
 using MediatR;
@@ -8,7 +11,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 namespace KairaCQRSMediator.Areas.Admin.Controllers
 {
     [Area("Admin")]
-    public class ProductController(IMediator _mediator,GetCategoryQueryHandler _getCategoryQueryHandler) : Controller
+    public class ProductController(IMediator _mediator,IDispatcher dispatcher) : Controller
     {
         public async Task<IActionResult> Index()
         {
@@ -18,7 +21,8 @@ namespace KairaCQRSMediator.Areas.Admin.Controllers
 
         public async Task<IActionResult> CreateProduct()
         {
-            var categories = await _getCategoryQueryHandler.Handle();
+            var categories =
+                await dispatcher.SendAsync(new GetCategoryQuery());
 
             ViewBag.categories = (from x in categories
                                   select new SelectListItem
@@ -35,7 +39,8 @@ namespace KairaCQRSMediator.Areas.Admin.Controllers
         {
             //Fast Fail Yöntemi 
 
-            var categories = await _getCategoryQueryHandler.Handle();
+            var categories =
+                await dispatcher.SendAsync(new GetCategoryQuery());
 
             ViewBag.categories = (from x in categories
                                   select new SelectListItem
@@ -56,7 +61,8 @@ namespace KairaCQRSMediator.Areas.Admin.Controllers
 
         public async Task<IActionResult> UpdateProduct(int id)
         {
-            var categories = await _getCategoryQueryHandler.Handle();
+            var categories =
+                await dispatcher.SendAsync(new GetCategoryQuery());
 
             ViewBag.categories = (from x in categories
                                   select new SelectListItem
@@ -73,7 +79,8 @@ namespace KairaCQRSMediator.Areas.Admin.Controllers
         public async Task<IActionResult> UpdateProduct(UpdateProductCommand command)
         {
 
-            var categories = await _getCategoryQueryHandler.Handle();
+            var categories =
+                await dispatcher.SendAsync(new GetCategoryQuery());
 
             ViewBag.categories = (from x in categories
                                   select new SelectListItem
